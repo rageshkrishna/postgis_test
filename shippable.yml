@@ -9,7 +9,12 @@ addons:
 install: true
 
 script:
+  # Display postgis versions
+  - psql -d postgres -c "SELECT name, default_version,installed_version FROM pg_available_extensions WHERE name LIKE 'postgis%' ;"
+  # Set up test database
   - createdb testdb
   - psql -d testdb -f /usr/share/postgresql/9.2/contrib/postgis-2.1/postgis.sql -v ON_ERROR_STOP=1
   - psql -d testdb -f /usr/share/postgresql/9.2/contrib/postgis-2.1/spatial_ref_sys.sql -v ON_ERROR_STOP=1
+  # Verify postgis installation
+  - psql -d testdb -c "SELECT PostGIS_Full_Version()"
   - psql -d testdb -c "select * from geometry_columns"
