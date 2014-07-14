@@ -1,0 +1,15 @@
+language: ruby
+
+rvm:
+  - 1.9.2
+
+addons:
+ postgresql : "9.2"
+ 
+install: true
+
+script:
+  - createdb testdb
+  - psql -d testdb -f /usr/share/postgresql/9.2/contrib/postgis-2.1/postgis.sql -v ON_ERROR_STOP=1
+  - psql -d testdb -f /usr/share/postgresql/9.2/contrib/postgis-2.1/spatial_ref_sys.sql -v ON_ERROR_STOP=1
+  - psql -d testdb -c "select * from geometry_columns"
